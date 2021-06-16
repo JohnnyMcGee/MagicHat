@@ -4,61 +4,48 @@ const fieldCharacter = "░";
 const pathCharacter = "*";
 
 class Field {
-  constructor(fieldMap) {
-    //
-    if (!fieldMap) {
-      this.fieldMap = Field.generateField();
-    } else {
-      this.fieldMap = fieldMap;
-    }
-    this.player = Field.randomPlace(this.fieldMap);
-
+  constructor(height=5, width=10) {
+    this.height = height;
+    this.width = width;
+    this._field = this.generateField(width, height);
+    this.player = this.somePlace();
+    console.log(this.player);
   }
 
-  static randomPlace(fieldMap) {
-    // Check the field dimensions
-    const height = fieldMap.length;
-    if (height===0) {return;}
-    const width = fieldMap[0].length;
-    if (width === 0) {return;}
-    // Pick a random coordinate
-    const x = Math.floor(Math.random() * width);
-    const y = Math.floor(Math.random() * height);
+  somePlace() {
+    const y = Math.floor(Math.random() * this.height);
+    const x = Math.floor(Math.random() * this.width);
     return [x, y];
   }
 
-  static generateField(width = 40, height = 20, difficulty) {
-    // percentage of map covered by holes
-    const holePercent = 0.10;
-    // generate a grid of fieldCharacters and holes
+  // generate a matrix of fieldCharacters and holes (and one pesky hat)
+  generateField(width, height, difficulty) {
     const rows = [...Array(height)];
-    let fieldMap = rows.map((_) => {
+    let field = rows.map((_) => {
       const cols = [...Array(width)];
       return cols.map((_) => {
-        return Math.random() > holePercent ? fieldCharacter : hole;
+        return Math.random() > .1 ? fieldCharacter : hole;
       });
     });
 
-    // place hat randomly somewhere on the map
-    let hat_x;
-    let hat_y;
-    [hat_x, hat_y] = Field.randomPlace(fieldMap);
-    fieldMap[hat_y][hat_x] = hat;
-    return fieldMap;
+    // hat goes randomly somewhere on the map
+    let x;
+    let y;
+    [x, y] = this.somePlace();
+    field[y][x] = hat;
+    return field;
   }
 
   print() {
-    // Copy the field map
-    let printMap = this.fieldMap.map(r => r.map(e => e));
-    // Put the player on the map copy
-    printMap[this.player[1]][this.player[0]] = pathCharacter;
-    // Display the map copy in the terminal
-    for (const row of printMap) {
+    // Get the field (copy)
+    let fieldCopy = this._field.map(r => r.map(e => e));
+    // Put the player on the field
+    fieldCopy[this.player[1]][this.player[0]] = pathCharacter;
+    // Print the field in the terminal
+    for (const row of fieldCopy) {
       console.log(row.join(""));
     }
   }
-
-
 
 }
 
