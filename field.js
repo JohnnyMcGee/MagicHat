@@ -12,8 +12,7 @@ class Field {
       this.fieldMap = fieldMap;
     }
     this.player = Field.randomPlace(this.fieldMap);
-    // put the player on the field
-    this.fieldMap[this.player[1]][this.player[0]] = pathCharacter;
+
   }
 
   static randomPlace(fieldMap) {
@@ -28,7 +27,7 @@ class Field {
     return [x, y];
   }
 
-  static generateField(width = 20, height = 10, difficulty) {
+  static generateField(width = 40, height = 20, difficulty) {
     // percentage of map covered by holes
     const holePercent = 0.10;
     // generate a grid of fieldCharacters and holes
@@ -49,10 +48,17 @@ class Field {
   }
 
   print() {
-    for (const row of this.fieldMap) {
+    // Copy the field map
+    let printMap = this.fieldMap.map(r => r.map(e => e));
+    // Put the player on the map copy
+    printMap[this.player[1]][this.player[0]] = pathCharacter;
+    // Display the map copy in the terminal
+    for (const row of printMap) {
       console.log(row.join(""));
     }
   }
+
+
 
 }
 
