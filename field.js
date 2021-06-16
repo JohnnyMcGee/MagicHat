@@ -9,7 +9,9 @@ class Field {
     this.width = width;
     this._field = this.generateField(width, height);
     this.player = this.somePlace();
-    console.log(this.player);
+    this._field[this.player[1]][this.player[0]] = fieldCharacter;
+    this.collision = "None";
+    // console.log(this.player);
   }
 
   get x() {
@@ -80,7 +82,7 @@ class Field {
   move_player(direction) {
     let x = this.x;
     let y = this.y;
-    console.log(x, y);
+    // console.log(x, y);
     switch (direction) {
       case "left":
         this.x = --x;
