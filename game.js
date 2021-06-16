@@ -26,8 +26,10 @@ class Game {
         this.listen();
     }
 
-    move(direction) {
-        console.log("Move ", direction);
+    move(userInput) {
+        const directions = {"l":"left", "r":"right", "u":"up", "d":"down"};
+        console.log("Move ", directions[userInput]);
+        this.field.move_player(directions[userInput]);
     }
 
     help() {

@@ -47,6 +47,39 @@ class Field {
     }
   }
 
+  get x() {return this.player[0];}
+  get y() {return this.player[1];}
+
+  set x(newX) {
+    const collision = this.isCollision(newX, this.y);
+    if (collision === "None") {
+      this.player[0] = newX;
+    } else {this.collision = collision;}
+  }
+
+  set y(newY) {
+    const collision = this.isCollision(this.x, newY);
+    if (collision === "None") {
+      this.player[1] = newY;
+    } else {this.collision = collision;}
+  }
+
+  move_player(direction) {
+    let x = this.x
+    let y = this.y
+    console.log(x, y);
+    switch(direction) {
+      case 'left':
+        this.x = --x; break;
+      case 'right':
+        this.x = ++x; break;
+      case 'up':
+        this.y = --y; break;
+      case 'down':
+        this.y = ++y; break;
+    }
+  }
+
 }
 
 module.exports.Field = Field;
