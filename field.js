@@ -4,7 +4,7 @@ const fieldCharacter = "░";
 const pathCharacter = "*";
 
 class Field {
-  constructor(height=5, width=10) {
+  constructor(height = 5, width = 10) {
     this.height = height;
     this.width = width;
     this._field = this.generateField(width, height);
@@ -12,10 +12,29 @@ class Field {
     console.log(this.player);
   }
 
-  somePlace() {
-    const y = Math.floor(Math.random() * this.height);
-    const x = Math.floor(Math.random() * this.width);
-    return [x, y];
+  get x() {
+    return this.player[0];
+  }
+  get y() {
+    return this.player[1];
+  }
+
+  set x(newX) {
+    const collision = this.isCollision(newX, this.y);
+    if (collision === "None") {
+      this.player[0] = newX;
+    } else {
+      this.collision = collision;
+    }
+  }
+
+  set y(newY) {
+    const collision = this.isCollision(this.x, newY);
+    if (collision === "None") {
+      this.player[1] = newY;
+    } else {
+      this.collision = collision;
+    }
   }
 
   // generate a matrix of fieldCharacters and holes (and one pesky hat)
@@ -24,7 +43,7 @@ class Field {
     let field = rows.map((_) => {
       const cols = [...Array(width)];
       return cols.map((_) => {
-        return Math.random() > .1 ? fieldCharacter : hole;
+        return Math.random() > 0.1 ? fieldCharacter : hole;
       });
     });
 
@@ -36,9 +55,51 @@ class Field {
     return field;
   }
 
+  somePlace() {
+    const y = Math.floor(Math.random() * this.height);
+    const x = Math.floor(Math.random() * this.width);
+    return [x, y];
+  }
+
+  isCollision(x, y) {
+    if (x < 0 || y < 0 || x > this.width - 1 || y > this.height - 1) {
+      return "Edge";
+    } else {
+      const place = this._field[y][x];
+      switch (place) {
+        case fieldCharacter:
+          return "None";
+        case hole:
+          return "Hole";
+        case hat:
+          return "Hat";
+      }
+    }
+  }
+
+  move_player(direction) {
+    let x = this.x;
+    let y = this.y;
+    console.log(x, y);
+    switch (direction) {
+      case "left":
+        this.x = --x;
+        break;
+      case "right":
+        this.x = ++x;
+        break;
+      case "up":
+        this.y = --y;
+        break;
+      case "down":
+        this.y = ++y;
+        break;
+    }
+  }
+
   print() {
     // Get the field (copy)
-    let fieldCopy = this._field.map(r => r.map(e => e));
+    let fieldCopy = this._field.map((r) => r.map((e) => e));
     // Put the player on the field
     fieldCopy[this.player[1]][this.player[0]] = pathCharacter;
     // Print the field in the terminal
@@ -46,40 +107,6 @@ class Field {
       console.log(row.join(""));
     }
   }
-
-  get x() {return this.player[0];}
-  get y() {return this.player[1];}
-
-  set x(newX) {
-    const collision = this.isCollision(newX, this.y);
-    if (collision === "None") {
-      this.player[0] = newX;
-    } else {this.collision = collision;}
-  }
-
-  set y(newY) {
-    const collision = this.isCollision(this.x, newY);
-    if (collision === "None") {
-      this.player[1] = newY;
-    } else {this.collision = collision;}
-  }
-
-  move_player(direction) {
-    let x = this.x
-    let y = this.y
-    console.log(x, y);
-    switch(direction) {
-      case 'left':
-        this.x = --x; break;
-      case 'right':
-        this.x = ++x; break;
-      case 'up':
-        this.y = --y; break;
-      case 'down':
-        this.y = ++y; break;
-    }
-  }
-
 }
 
 module.exports.Field = Field;
