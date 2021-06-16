@@ -4,11 +4,12 @@ const fieldCharacter = "░";
 const pathCharacter = "*";
 
 class Field {
-  constructor(height = 5, width = 10) {
+  constructor(width = 10, height = 5) {
     this.height = height;
     this.width = width;
     this._field = this.generateField(width, height);
     this.player = this.somePlace();
+    this.playerCharacter = "@'";
     this._field[this.player[1]][this.player[0]] = fieldCharacter;
     this.collision = "None";
     // console.log(this.player);
@@ -85,15 +86,19 @@ class Field {
     // console.log(x, y);
     switch (direction) {
       case "left":
+        this.playerCharacter = "`@"
         this.x = --x;
         break;
       case "right":
+        this.playerCharacter = "@,"
         this.x = ++x;
         break;
       case "up":
+        this.playerCharacter = "@'"
         this.y = --y;
         break;
       case "down":
+        this.playerCharacter = ",@"
         this.y = ++y;
         break;
     }
@@ -103,7 +108,7 @@ class Field {
     // Get the field (copy)
     let fieldCopy = this._field.map((r) => r.map((e) => e));
     // Put the player on the field
-    fieldCopy[this.player[1]][this.player[0]] = pathCharacter;
+    fieldCopy[this.player[1]][this.player[0]] = this.playerCharacter;
     // Print the field in the terminal
     for (const row of fieldCopy) {
       console.log(row.join(""));

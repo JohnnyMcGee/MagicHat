@@ -4,8 +4,9 @@ const prompt = require('prompt-sync')({sigint: true});
 
 
 class Game {
-    constructor(field) {
-        this.field = field;
+    constructor() {
+        this.field = new Field(40, 20);
+        this.help();
         this.listen();
     }
 
@@ -41,8 +42,36 @@ class Game {
     }
 
     help() {
-        console.log("Some Help Stuff Here");
-        prompt("Press [Enter] To Continue\t")
+        console.log(`
+
+
+        HELP
+        ----------------------------------------
+        WizzenBeard, that forgetful old wizard,
+        has lost his magic hat. Or perhaps it wandered off?
+        It does seem to have a mind of its own at times...
+
+        Help him find it by telling him which way to go.
+        Don't let him fall into a dark hole or wander of the edge of the map.
+        Otherwise I fear the magic of the hat may be lost forever...
+        ----------------------------------------
+        Controls: (type the key, then press enter)
+
+        [l] Move Left
+        [r] Move Right
+        [u] Move Up
+        [d] Move Down
+        [x] Exit Game
+        [h] Help
+
+        Characters: (as seen on the map)
+        @' WizzenBeard
+        ^ Wizzenbeard's Missing Hat
+        O dark hole (full of black magic)
+
+
+        `);
+        prompt("Press [Enter] To Continue\n> ")
     }
 
     gameOver(collision) {
@@ -79,3 +108,7 @@ class Game {
 }
 
 module.exports.Game = Game;
+
+if (require.main === module) {
+    new Game();
+}
