@@ -8,10 +8,14 @@ class Field {
     this.height = height;
     this.width = width;
     this._field = this.generateField(width, height);
-    this.placeGamePieces();
+    // Calculate position of wizard and his hat
+    const gamePieces = this.placeGamePieces();
+    this.player = gamePieces["player"];
+    const hatPiece = gamePieces["hat"];
+    // Place hat on the board
+    this._field[hatPiece[1]][hatPiece[0]] = hat;
     this.playerCharacter = "@'";
     this.collision = "None";
-    // console.log(this.player);
   }
 
   get x() {
@@ -39,15 +43,17 @@ class Field {
     }
   }
 
+  // Spread the pieces out on the field
   placeGamePieces() {
     const hatPlace = this.somePlace();
-    this._field[hatPlace[1]][hatPlace[0]] = hat;
-    this.player = this.somePlace();
-    this._field[this.player[1]][this.player[0]] = fieldCharacter;
-
-  }
-  checkDistance(p1, p2) {
-    return Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]);
+    const minDist = (this.width + this.height) * .67
+    let player;
+    let distance = 0;
+    while (distance < minDist) {
+      player = this.somePlace();
+      distance = Math.abs(player[0] - hatPlace[0]) + Math.abs(player[1] - hatPlace[1]);
+    }
+    return {"player":player, "hat":hatPlace};
   }
 
   // generate a matrix of fieldCharacters and holes (and one pesky hat)
