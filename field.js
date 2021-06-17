@@ -98,11 +98,11 @@ class Field {
     switch (direction) {
       case "left":
         this.playerCharacter = "`@"
-        this.x = --x;
+        this.x = x-2;
         break;
       case "right":
         this.playerCharacter = "@,"
-        this.x = ++x;
+        this.x = x+2;
         break;
       case "up":
         this.playerCharacter = "@'"
