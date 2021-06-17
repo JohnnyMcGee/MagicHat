@@ -4,13 +4,12 @@ const fieldCharacter = "░";
 const pathCharacter = "*";
 
 class Field {
-  constructor(width = 10, height = 5) {
+  constructor(width = 40, height = 20) {
     this.height = height;
     this.width = width;
     this._field = this.generateField(width, height);
-    this.player = this.somePlace();
+    this.placeGamePieces();
     this.playerCharacter = "@'";
-    this._field[this.player[1]][this.player[0]] = fieldCharacter;
     this.collision = "None";
     // console.log(this.player);
   }
@@ -40,6 +39,17 @@ class Field {
     }
   }
 
+  placeGamePieces() {
+    const hatPlace = this.somePlace();
+    this._field[hatPlace[1]][hatPlace[0]] = hat;
+    this.player = this.somePlace();
+    this._field[this.player[1]][this.player[0]] = fieldCharacter;
+
+  }
+  checkDistance(p1, p2) {
+    return Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]);
+  }
+
   // generate a matrix of fieldCharacters and holes (and one pesky hat)
   generateField(width, height, difficulty) {
     const rows = [...Array(height)];
@@ -49,12 +59,6 @@ class Field {
         return Math.random() > 0.1 ? fieldCharacter : hole;
       });
     });
-
-    // hat goes randomly somewhere on the map
-    let x;
-    let y;
-    [x, y] = this.somePlace();
-    field[y][x] = hat;
     return field;
   }
 
