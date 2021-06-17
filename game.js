@@ -5,7 +5,7 @@ const prompt = require('prompt-sync')({sigint: true});
 
 class Game {
     constructor() {
-        this.field = new Field(40, 20);
+        this.field = new Field();
         this.help();
         this.listen();
     }
@@ -28,7 +28,7 @@ class Game {
             this.listen();
         } else if (['l','r','u','d'].includes(userInput)) {
             this.move(userInput);
-        }
+        } else {this.listen();}
     }
 
     move(userInput) {
