@@ -110,5 +110,5 @@ class Game {
 module.exports.Game = Game;
 
 if (require.main === module) {
-    new Game();
+    const game = new Game();
 }

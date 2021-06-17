@@ -75,18 +75,19 @@ class Field {
   }
 
   isCollision(x, y) {
-    if (x < 0 || y < 0 || x > this.width - 1 || y > this.height - 1) {
+    if (x < -1 || y < 0 || x > this.width - 1 || y > this.height - 1) {
       return "Edge";
     } else {
-      const place = this._field[y][x];
-      switch (place) {
-        case fieldCharacter:
-          return "None";
-        case hole:
-          return "Hole";
-        case hat:
-          return "Hat";
+      const place = [this._field[y][x], this._field[y][x+1]];
+      for (let char of place) {
+        switch (char) {
+          case hole:
+            return "Hole";
+          case hat:
+            return "Hat";
+        }
       }
+      return "None";
     }
   }
 
@@ -118,7 +119,9 @@ class Field {
     // Get the field (copy)
     let fieldCopy = this._field.map((r) => r.map((e) => e));
     // Put the player on the field
-    fieldCopy[this.player[1]][this.player[0]] = this.playerCharacter;
+    fieldCopy[this.player[1]][this.player[0]] = this.playerCharacter[0];
+    fieldCopy[this.player[1]][this.player[0] + 1] = this.playerCharacter[1];
+
     // Print the field in the terminal
     for (const row of fieldCopy) {
       console.log(row.join(""));
