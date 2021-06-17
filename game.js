@@ -52,7 +52,7 @@ class Game {
         It does seem to have a mind of its own at times...
 
         Help him find it by telling him which way to go.
-        Don't let him fall into a dark hole or wander of the edge of the map.
+        Don't let him fall into a dark hole or wander off the edge of the map.
         Otherwise I fear the magic of the hat may be lost forever...
         ----------------------------------------
         Controls: (type the key, then press enter)
