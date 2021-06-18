@@ -37,6 +37,45 @@ Help Old WizzenBeard Find His Magic Hat
 
 const gamePromptMessage = "Which way? [enter [h] for help]";
 
+const edgeCollisionMessage = `
+Watch out for that...! nevermind.
+
+You fell off the edge!
+`;
+
+const holeCollisionMessage = `
+"Wuh, wuh, Whoooooooah!"
+
+You fell in a hole.
+`;
+
+const hatCollisionMessage = `
+"Yippee! I've finally found my magic hat!"
+"Now, where did I leave those magic car keys...?"
+
+Congratulations. You helped Old WizzenBeard find his magic hat.
+`;
+
+const collisionMessage = {
+    "Edge": edgeCollisionMessage,
+    "Hole": holeCollisionMessage,
+    "Hat": hatCollisionMessage,
+};
+
+const gameOverMessage = `
+----------------------------------------
+GAME OVER.
+----------------------------------------
+
+Play Again? [Y | N]
+`
+
+const exitGameMessage = `
+Thank you for playing Magic Hat.
+----------------------------------------
+
+Goodbye!
+`
 
 class Game {
     constructor() {
@@ -81,10 +120,15 @@ class Game {
         } else if (isHelpCommand) {
             this.displayHelp();
         } else if (isExitCommand) {
-            console.clear();
+            this.exitGame();
         } else {
             this.updateGameDisplay();
         }
+    }
+
+    exitGame() {
+        console.clear();
+        console.log(exitGameMessage);
     }
 
     move(userInput) {
@@ -103,37 +147,34 @@ class Game {
     }
 
     gameOver(collision) {
-        console.clear();
-        this.field.print();
-        switch(collision) {
-            case "Edge":
-                console.log('"Watch out for that...! nevermind."');
-                console.log("\nYou fell off the edge!\n");
-                break;
-            case "Hole":
-                console.log('"Wuh, wuh, Whoooooooah!"');
-                console.log("\nYou fell in a hole.\n");
-                break;
-            case "Hat":
-                console.log('"Yippee! I\'ve finally found my magic hat!"');
-                console.log('"Now, where did I leave those magic car keys...?"');
-                console.log("\nCongratulations. You helped Old WizzenBeard find his magic hat.\n");
-                break;
+        this.updateFieldDisplay();
+        this.displayCollision(collision);
+        this.promptToPlayAgain();
+    }
+
+    displayCollision(collision) {
+        const message = collisionMessage[collision];
+        console.log(message);
+        console.log(gameOverMessage)
+    }
+
+    promptToPlayAgain() {
+        const playAgain = prompt("> ").toLowerCase();
+        const yes = playAgain === 'y';
+        const no = playAgain === 'n';
+
+        if (yes) {
+            this.restartGame();
+        } else if (no) {
+            this.exitGame();
+        } else {
+            this.gameOver();
         }
-        console.log("GAME OVER.")
-        let playAgain;
-        while (playAgain != 'y' && playAgain != 'n') {
-            console.log("\nPlay Again? [Y | N]");
-            playAgain = prompt("> ");
-            playAgain = playAgain.toLowerCase();
-            if (playAgain === 'y') {
-                this.field = new Field();
-                this.updateGameDisplay();
-            } else if (playAgain === 'n') {
-                console.clear();
-                return
-            }
-        }
+    }
+
+    restartGame() {
+        this.field = new Field();
+        this.updateGameDisplay();
     }
 }
 
