@@ -96,19 +96,19 @@ class Field {
     let y = this.y;
     // console.log(x, y);
     switch (direction) {
-      case "left":
+      case "l":
         this.playerCharacter = "`@"
         this.x = x-2;
         break;
-      case "right":
+      case "r":
         this.playerCharacter = "@,"
         this.x = x+2;
         break;
-      case "up":
+      case "u":
         this.playerCharacter = "@'"
         this.y = --y;
         break;
-      case "down":
+      case "d":
         this.playerCharacter = ",@"
         this.y = ++y;
         break;

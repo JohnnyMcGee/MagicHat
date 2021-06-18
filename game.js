@@ -85,12 +85,17 @@ class Game {
     }
 
     move(userInput) {
-        const directions = {"l":"left", "r":"right", "u":"up", "d":"down"};
-        this.field.move_player(directions[userInput]);
-        if (this.field.collision == "None") {
+        this.field.move_player(userInput);
+        this.checkForCollision();
+    }
+
+    checkForCollision() {
+        const collision = this.field.collision;
+
+        if (collision === "None") {
             this.updateGameDisplay();
         } else {
-            this.gameOver(this.field.collision);
+            this.gameOver(collision);
         }
     }
 
@@ -118,10 +123,10 @@ class Game {
             console.log("\nPlay Again? [Y | N]");
             playAgain = prompt("> ");
             playAgain = playAgain.toLowerCase();
-            if (playAgain == 'y') {
+            if (playAgain === 'y') {
                 this.field = new Field();
                 this.updateGameDisplay();
-            } else if (playAgain == 'n') {
+            } else if (playAgain === 'n') {
                 return
             }
         }
