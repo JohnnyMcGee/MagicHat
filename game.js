@@ -29,25 +29,37 @@ Characters: (as seen on the map)
 ^ Wizzenbeard's Missing Hat
 O dark hole (full of black magic)
 
-
 `;
+
+const gameTitle = `
+Help Old WizzenBeard Find His Magic Hat
+----------------------------------------`;
+
+const gamePromptMessage = "Which way? [enter [h] for help]";
 
 
 class Game {
     constructor() {
         this.field = new Field();
         this.displayHelp();
-        this.listen();
+        this.updateGameDisplay();
     }
 
-    listen() {
-        console.clear();
-        console.log("Help Old WizzenBeard Find His Magic Hat");
-        console.log("----------------------------------------");
-        this.field.print();
-        console.log("Which way? [enter [h] for help]");
-        const userInput = prompt("> ");
+    updateGameDisplay() {
+        this.updateFieldDisplay();
+        const userInput = this.promptUser();
         this.mapUserInputToState(userInput);
+    }
+
+    updateFieldDisplay() {
+        console.clear();
+        console.log(gameTitle);
+        this.field.print();
+    }
+
+    promptUser() {
+    console.log(gamePromptMessage);
+    return prompt("> ");
     }
 
     mapUserInputToState(userInput) {
@@ -55,17 +67,17 @@ class Game {
             return
         } else if (userInput === 'h') {
             this.displayHelp();
-            this.listen();
+            this.updateGameDisplay();
         } else if (['l','r','u','d'].includes(userInput)) {
             this.move(userInput);
-        } else {this.listen();}
+        } else {this.updateGameDisplay();}
     }
 
     move(userInput) {
         const directions = {"l":"left", "r":"right", "u":"up", "d":"down"};
         this.field.move_player(directions[userInput]);
         if (this.field.collision == "None") {
-            this.listen();
+            this.updateGameDisplay();
         } else {
             this.gameOver(this.field.collision);
         }
@@ -97,11 +109,12 @@ class Game {
         console.log("GAME OVER.")
         let playAgain;
         while (playAgain != 'y' && playAgain != 'n') {
-            playAgain = prompt("Play Again? [Y | N]\n> ");
+            console.log("\nPlay Again? [Y | N]");
+            playAgain = prompt("> ");
             playAgain = playAgain.toLowerCase();
             if (playAgain == 'y') {
                 this.field = new Field();
-                this.listen();
+                this.updateGameDisplay();
             } else if (playAgain == 'n') {
                 return
             }
