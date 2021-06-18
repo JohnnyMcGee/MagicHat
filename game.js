@@ -42,6 +42,12 @@ class Game {
     constructor() {
         this.field = new Field();
         this.displayHelp();
+    }
+
+    displayHelp() {
+        console.log(helpMessage);
+        prompt("Press [Enter] To Continue\n> ")
+        // Return to game screen when user presses enter
         this.updateGameDisplay();
     }
 
@@ -63,14 +69,19 @@ class Game {
     }
 
     mapUserInputToState(userInput) {
-        if (userInput === 'x') {
-            return
-        } else if (userInput === 'h') {
-            this.displayHelp();
-            this.updateGameDisplay();
-        } else if (['l','r','u','d'].includes(userInput)) {
+        const isMoveCommand = ['l','r','u','d'].includes(userInput);
+        const isHelpCommand = userInput === 'h';
+        const isExitCommand = userInput === 'x';
+
+        if (isMoveCommand) {
             this.move(userInput);
-        } else {this.updateGameDisplay();}
+        } else if (isHelpCommand) {
+            this.displayHelp();
+        } else if (isExitCommand) {
+            console.clear();
+        } else {
+            this.updateGameDisplay();
+        }
     }
 
     move(userInput) {
@@ -81,11 +92,6 @@ class Game {
         } else {
             this.gameOver(this.field.collision);
         }
-    }
-
-    displayHelp() {
-        console.log(helpMessage);
-        prompt("Press [Enter] To Continue\n> ")
     }
 
     gameOver(collision) {
