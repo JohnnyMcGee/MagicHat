@@ -2,11 +2,41 @@ const { Field } = require('./field');
 
 const prompt = require('prompt-sync')({sigint: true});
 
+const helpMessage = `
+
+
+HELP
+----------------------------------------
+WizzenBeard, that forgetful old wizard,
+has lost his magic hat. Or perhaps it wandered off?
+It does seem to have a mind of its own at times...
+
+Help him find it by telling him which way to go.
+Don't let him fall into a dark hole or wander off the edge of the map.
+Otherwise I fear the magic of the hat may be lost forever...
+----------------------------------------
+Controls: (type the key, then press enter)
+
+[l] Move Left
+[r] Move Right
+[u] Move Up
+[d] Move Down
+[x] Exit Game
+[h] Help
+
+Characters: (as seen on the map)
+@' WizzenBeard
+^ Wizzenbeard's Missing Hat
+O dark hole (full of black magic)
+
+
+`;
+
 
 class Game {
     constructor() {
         this.field = new Field();
-        this.help();
+        this.displayHelp();
         this.listen();
     }
 
@@ -24,7 +54,7 @@ class Game {
         if (userInput === 'x') {
             return
         } else if (userInput === 'h') {
-            this.help();
+            this.displayHelp();
             this.listen();
         } else if (['l','r','u','d'].includes(userInput)) {
             this.move(userInput);
@@ -41,36 +71,8 @@ class Game {
         }
     }
 
-    help() {
-        console.log(`
-
-
-        HELP
-        ----------------------------------------
-        WizzenBeard, that forgetful old wizard,
-        has lost his magic hat. Or perhaps it wandered off?
-        It does seem to have a mind of its own at times...
-
-        Help him find it by telling him which way to go.
-        Don't let him fall into a dark hole or wander off the edge of the map.
-        Otherwise I fear the magic of the hat may be lost forever...
-        ----------------------------------------
-        Controls: (type the key, then press enter)
-
-        [l] Move Left
-        [r] Move Right
-        [u] Move Up
-        [d] Move Down
-        [x] Exit Game
-        [h] Help
-
-        Characters: (as seen on the map)
-        @' WizzenBeard
-        ^ Wizzenbeard's Missing Hat
-        O dark hole (full of black magic)
-
-
-        `);
+    displayHelp() {
+        console.log(helpMessage);
         prompt("Press [Enter] To Continue\n> ")
     }
 
