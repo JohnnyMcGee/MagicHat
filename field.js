@@ -37,18 +37,25 @@ class Field {
   }
 
   placePlayer() {
-    const player = this.somePlace();
-    return this.checkDistanceFromHat(player);
+    const [x, y] = this.getPlayerPosition();
+    this.makeSpaceOnField(x, y);
+    return [x, y];
   }
 
-  checkDistanceFromHat(player) {
+  makeSpaceOnField(x, y) {
+    this._field[y][x] = fieldCharacter;
+    this._field[y][x+1] = fieldCharacter;
+  }
+
+  getPlayerPosition() {
+    const player = this.somePlace();
     const minDist = this.getMinDistFromHat();
     const distance = this.getHatDistance(player);
 
     if (distance >= minDist) {
       return player;
     } else {
-      return this.placePlayer();
+      return this.getPlayerPosition();
     }
   }
 
