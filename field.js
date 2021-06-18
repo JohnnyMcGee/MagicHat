@@ -1,7 +1,6 @@
 const hat = "^";
 const hole = "O";
 const fieldCharacter = "░";
-// const pathCharacter = "*";
 
 class Field {
   constructor(width = 40, height = 20) {
