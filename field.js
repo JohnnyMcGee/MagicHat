@@ -8,7 +8,7 @@ class Field {
     this.height = height;
     this.width = width;
     this._field = this.generateField(width, height);
-    // Calculate position of wizard and his hat
+    // // Calculate position of wizard and his hat
     const gamePieces = this.placeGamePieces();
     this.player = gamePieces["player"];
     const hatPiece = gamePieces["hat"];
@@ -49,10 +49,10 @@ class Field {
     const minDist = (this.width + this.height) * .67
     let player;
     let distance = 0;
-    while (distance < minDist) {
+    // while (distance < minDist) {
       player = this.somePlace();
-      distance = Math.abs(player[0] - hatPlace[0]) + Math.abs(player[1] - hatPlace[1]);
-    }
+      // distance = Math.abs(player[0] - hatPlace[0]) + Math.abs(player[1] - hatPlace[1]);
+    // }
     return {"player":player, "hat":hatPlace};
   }
 
@@ -133,5 +133,6 @@ module.exports.Field = Field;
 
 if (require.main === module) {
   field = new Field();
+  // console.log(field._field);
   field.print();
 }

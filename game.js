@@ -41,6 +41,9 @@ const gamePromptMessage = "Which way? [enter [h] for help]";
 class Game {
     constructor() {
         this.field = new Field();
+    }
+
+    play() {
         this.displayHelp();
     }
 
@@ -127,6 +130,7 @@ class Game {
                 this.field = new Field();
                 this.updateGameDisplay();
             } else if (playAgain === 'n') {
+                console.clear();
                 return
             }
         }
@@ -137,4 +141,5 @@ module.exports.Game = Game;
 
 if (require.main === module) {
     const game = new Game();
+    game.play();
 }
