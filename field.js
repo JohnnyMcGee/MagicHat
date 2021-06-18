@@ -17,7 +17,7 @@ class Field {
   // randomly generate a 2D game map
   generateField() {
     // Randomly return a hole 10% of the time
-    const getTerrain = () => Math.random() > 0.1 ? fieldCharacter : hole;
+    const getTerrain = () => (Math.random() > 0.1 ? fieldCharacter : hole);
     // Populate each row on the map with terrain
     const getRow = () => [...Array(this.width)].map(getTerrain);
     // Fill in the field with rows(2D Array)
@@ -41,24 +41,9 @@ class Field {
     return this.checkDistanceFromHat(player);
   }
 
-  getMinDistFromHat() {
-    // No matter where the hat is,
-    // We can always put the player at least this far away:
-    return Math.max(this.height, this.width) / 2;
-  }
-
-  getDistFromHat(player) {
-    // vector subtraction
-    const difference = player.map((e, i) => e - this.hat[i]);
-    // pythagorean theorem returns the magnitude
-    const square = (x) => x ** 2;
-    const sum = (x, y) => x + y;
-    return Math.sqrt(difference.map(square).reduce(sum));
-  }
-
   checkDistanceFromHat(player) {
     const minDist = this.getMinDistFromHat();
-    const distance = this.getDistFromHat(player);
+    const distance = this.getHatDistance(player);
 
     if (distance >= minDist) {
       return player;
@@ -67,70 +52,61 @@ class Field {
     }
   }
 
-  get x() {
-    return this.player[0];
-  }
-  get y() {
-    return this.player[1];
+  getMinDistFromHat() {
+    // No matter where the hat is,
+    // We can always put the player at least this far away:
+    return Math.max(this.height, this.width) / 2;
   }
 
-  set x(newX) {
-    const collision = this.isCollision(newX, this.y);
-    if (collision === "None") {
-      this.player[0] = newX;
+  getHatDistance(player) {
+    // vector subtraction
+    const difference = player.map((e, i) => e - this.hat[i]);
+    // pythagorean theorem returns the magnitude
+    const square = (x) => x ** 2;
+    const sum = (x, y) => x + y;
+    return Math.sqrt(difference.map(square).reduce(sum));
+  }
+
+  movePlayer(direction) {
+    let [x, y] = this.player;
+
+    const moves = {
+      l: () => (x -= 2) /* move left */,
+      r: () => (x += 2) /* move right */,
+      u: () => y-- /* move up */,
+      d: () => y++ /* move down */,
+    };
+
+    moves[direction]();
+
+    this.player = [x, y];
+    this.updateCollisionState();
+  }
+
+  updateCollisionState() {
+    if (this.checkIfOutOfBounds()) {
+      this.collision = "Edge";
     } else {
-      this.collision = collision;
+      this.collision = this.getCurrentCollision();
     }
   }
 
-  set y(newY) {
-    const collision = this.isCollision(this.x, newY);
-    if (collision === "None") {
-      this.player[1] = newY;
-    } else {
-      this.collision = collision;
-    }
-  }
-
-  isCollision(x, y) {
+  checkIfOutOfBounds() {
+    const [x, y] = this.player;
     if (x < -1 || y < 0 || x > this.width - 1 || y > this.height - 1) {
-      return "Edge";
-    } else {
-      const place = [this._field[y][x], this._field[y][x + 1]];
-      for (let char of place) {
-        switch (char) {
-          case hole:
-            return "Hole";
-          case hat:
-            return "Hat";
-        }
-      }
-      return "None";
+      return true;
     }
   }
 
-  move_player(direction) {
-    let x = this.x;
-    let y = this.y;
-    // console.log(x, y);
-    switch (direction) {
-      case "l":
-        this.playerCharacter = "`@";
-        this.x = x - 2;
-        break;
-      case "r":
-        this.playerCharacter = "@,";
-        this.x = x + 2;
-        break;
-      case "u":
-        this.playerCharacter = "@'";
-        this.y = --y;
-        break;
-      case "d":
-        this.playerCharacter = ",@";
-        this.y = ++y;
-        break;
-    }
+  getCurrentCollision() {
+    const [x, y] = this.player;
+    // Retrieve the two map characters at the player's current position
+    const leftChar = this._field[y][x];
+    const rightChar = this._field[y][x + 1];
+    // Check for special characters
+    const isHat = [leftChar, rightChar].includes(hatCharacter);
+    const isHole = [leftChar, rightChar].includes(hole);
+    return isHat ? "Hat" : isHole ? "Hole" : "None";
   }
 
   print() {

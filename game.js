@@ -63,7 +63,7 @@ class Game {
   }
 
   move(userInput) {
-    this.field.move_player(userInput);
+    this.field.movePlayer(userInput);
     this.checkForCollision();
   }
 
