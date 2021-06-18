@@ -1,6 +1,7 @@
 const { Field } = require('./field');
 
-const prompt = require('prompt-sync')({sigint: true});
+const promptSync = require('prompt-sync')({sigint: true});
+const prompt = (ask="> ", value, opts) => promptSync(ask, value, opts);
 
 const helpMessage = `
 
@@ -29,7 +30,7 @@ Characters: (as seen on the map)
 ^ Wizzenbeard's Missing Hat
 O dark hole (full of black magic)
 
-`;
+Press [Enter] To Continue`;
 
 const gameTitle = `
 Help Old WizzenBeard Find His Magic Hat
@@ -67,8 +68,7 @@ const gameOverMessage = `
 GAME OVER.
 ----------------------------------------
 
-Play Again? [Y | N]
-`
+Play Again? [Y | N]`
 
 const exitGameMessage = `
 Thank you for playing Magic Hat.
@@ -88,7 +88,7 @@ class Game {
 
     displayHelp() {
         console.log(helpMessage);
-        prompt("Press [Enter] To Continue\n> ")
+        prompt();
         // Return to game screen when user presses enter
         this.updateGameDisplay();
     }
@@ -107,7 +107,7 @@ class Game {
 
     promptUser() {
     console.log(gamePromptMessage);
-    return prompt("> ");
+    return prompt();
     }
 
     mapUserInputToState(userInput) {
@@ -159,7 +159,7 @@ class Game {
     }
 
     promptToPlayAgain() {
-        const playAgain = prompt("> ").toLowerCase();
+        const playAgain = prompt().toLowerCase();
         const yes = playAgain === 'y';
         const no = playAgain === 'n';
 
