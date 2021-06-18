@@ -33,7 +33,7 @@ class Game {
   updateFieldDisplay() {
     console.clear();
     console.log(gameMessage["Title"]);
-    this.field.print();
+    this.field.display();
   }
 
   promptUser() {

@@ -109,17 +109,25 @@ class Field {
     return isHat ? "Hat" : isHole ? "Hole" : "None";
   }
 
-  print() {
-    // Get the field (copy)
-    let fieldCopy = this._field.map((r) => r.map((e) => e));
-    // Put the player on the field
-    fieldCopy[this.player[1]][this.player[0]] = this.playerCharacter[0];
-    fieldCopy[this.player[1]][this.player[0] + 1] = this.playerCharacter[1];
+  display() {
+    const field = this.copyField();
+    this.addPlayerToField(field);
+    this.print(field);
+  }
 
-    // Print the field in the terminal
-    for (const row of fieldCopy) {
-      console.log(row.join(""));
-    }
+  copyField() {
+    return this._field.map((row) => row.map((element) => element));
+  }
+
+  addPlayerToField(field) {
+    const [x, y] = this.player;
+    const [leftChar, rightChar] = this.playerCharacter.split('');
+    field[y][x] = leftChar;
+    field[y][x + 1] = rightChar;
+  }
+
+  print(field=this.field) {
+    field.forEach(row => console.log(row.join("")));
   }
 }
 
@@ -127,6 +135,5 @@ module.exports.Field = Field;
 
 if (require.main === module) {
   field = new Field();
-  // console.log(field._field);
-  field.print();
+  field.display();
 }
