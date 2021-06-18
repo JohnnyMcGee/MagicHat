@@ -6,7 +6,7 @@ class Field {
   constructor(width = 40, height = 20) {
     this.height = height;
     this.width = width;
-    this._field = this.generateField(width, height);
+    this._field = this.generateField();
     this.hat = this.placeHat();
     this.player = this.placePlayer();
   }
@@ -14,8 +14,61 @@ class Field {
   playerCharacter = "@'";
   collision = "None";
 
+  // randomly generate a 2D game map
+  generateField() {
+    // Randomly return a hole 10% of the time
+    const getTerrain = () => Math.random() > 0.1 ? fieldCharacter : hole;
+    // Populate each row on the map with terrain
+    const getRow = () => [...Array(this.width)].map(getTerrain);
+    // Fill in the field with rows(2D Array)
+    return [...Array(this.height)].map(getRow);
+  }
+
+  placeHat() {
+    const [x, y] = this.somePlace();
+    this._field[y][x] = hatCharacter;
+    return [x, y];
+  }
+
+  somePlace() {
+    const y = Math.floor(Math.random() * this.height);
+    const x = Math.floor(Math.random() * this.width);
+    return [x, y];
+  }
+
+  placePlayer() {
+    const player = this.somePlace();
+    return this.checkDistanceFromHat(player);
+  }
+
+  getMinDistFromHat() {
+    // No matter where the hat is,
+    // We can always put the player at least this far away:
+    return Math.max(this.height, this.width) / 2;
+  }
+
+  getDistFromHat(player) {
+    // vector subtraction
+    const difference = player.map((e, i) => e - this.hat[i]);
+    // pythagorean theorem returns the magnitude
+    const square = (x) => x ** 2;
+    const sum = (x, y) => x + y;
+    return Math.sqrt(difference.map(square).reduce(sum));
+  }
+
+  checkDistanceFromHat(player) {
+    const minDist = this.getMinDistFromHat();
+    const distance = this.getDistFromHat(player);
+
+    if (distance >= minDist) {
+      return player;
+    } else {
+      return this.placePlayer();
+    }
+  }
+
   get x() {
-    return this.player[0];  
+    return this.player[0];
   }
   get y() {
     return this.player[1];
@@ -37,61 +90,6 @@ class Field {
     } else {
       this.collision = collision;
     }
-  }
-
-  placeHat() {
-    const [x, y] = this.somePlace();
-    this._field[y][x] = hatCharacter;
-    return [x, y];
-  }
-
-  placePlayer() {
-    const player = this.somePlace();
-    return this.checkDistanceFromHat(player);
-  }
-
-  getMinDistFromHat() {
-    // No matter where the hat is,
-    // We can always put the player at least this far away:
-    return Math.max(this.height, this.width) / 2;
-  }
-
-  getDistFromHat(player) {
-    // vector subtraction
-    const difference = player.map((e, i) => e - this.hat[i]);
-    // pythagorean theorem returns the magnitude
-    const square = x => x**2;
-    const sum = (x,y) => x+y;
-    return Math.sqrt(difference.map(square).reduce(sum));
-  }
-
-  checkDistanceFromHat(player) {
-    const minDist = this.getMinDistFromHat();
-    const distance = this.getDistFromHat(player);
-
-    if (distance >= minDist) {
-      return player;
-    } else {
-      return this.placePlayer();
-    }
-  }
-
-  // generate a matrix of fieldCharacters and holes (and one pesky hat)
-  generateField(width, height, difficulty) {
-    const rows = [...Array(height)];
-    let field = rows.map((_) => {
-      const cols = [...Array(width)];
-      return cols.map((_) => {
-        return Math.random() > 0.1 ? fieldCharacter : hole;
-      });
-    });
-    return field;
-  }
-
-  somePlace() {
-    const y = Math.floor(Math.random() * this.height);
-    const x = Math.floor(Math.random() * this.width);
-    return [x, y];
   }
 
   isCollision(x, y) {
